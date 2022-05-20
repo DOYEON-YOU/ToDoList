@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/reset-css@5.0.1/reset.min.css"
+    />
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+      @font-face {
+        font-family: 'Hahmlet-SemiBold';
+        src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2110@1.0/Hahmlet-SemiBold.woff2')
+          format('woff2');
+        font-weight: normal;
+        font-style: normal;
+      }
+
+      body {
+        display: flex;
+        justify-content: center;
+        width: 100vw;
+      }
+
+      #capture {
+        position: absolute;
+        top: 120px;
+        margin: 0 auto;
+        display: inline-block;
+        width: 600px;
+        height: 1000px;
+        border: 5px solid black;
+        border-radius: 6px;
+        text-align: center;
+      }
+
+      #todo {
+        font-family: 'Hahmlet-SemiBold';
+        margin-top: 10px;
+        font-size: 50px;
+      }
+
+      #line {
+        margin-top: 10px;
+        border: 2px solid black;
+      }
+
+      #oath {
+        font-family: 'Hahmlet-SemiBold';
+        margin-top: 20px;
+        font-size: 30px;
+      }
+
+      .oaths:nth-child(1) {
+        margin-bottom: 5px;
+      }
+
+      #name {
+        font-family: 'Hahmlet-SemiBold';
+        text-align: center;
+        width: 80px;
+        height: 30px;
+        font-size: 23px;
+        margin-bottom: 5px;
+        border: 2px solid black;
+      }
+
+      #datetime {
+        font-family: 'Hahmlet-SemiBold';
+        margin-top: 20px;
+        width: 270px;
+        height: 35px;
+        font-size: 20px;
+        border: 3px solid black;
+      }
+
+      #list {
+        margin-top: 20px;
+      }
+
+      #import {
+        font-family: 'Hahmlet-SemiBold';
+        text-align: start;
+        margin-left: 40px;
+        margin-bottom: 20px;
+        font-size: 25px;
+        font-weight: bold;
+      }
+
+      #need {
+        font-family: 'Hahmlet-SemiBold';
+        margin-top: 20px;
+        text-align: start;
+        margin-left: 40px;
+        margin-bottom: 20px;
+        font-size: 25px;
+        font-weight: bold;
+      }
+
+      .lists {
+        font-family: 'Hahmlet-SemiBold';
+        font-size: 20px;
+        margin-bottom: 15px;
+        width: 470px;
+        height: 40px;
+        border: 2px solid black;
+        transition: all 0.5s;
+        border-radius: 9px;
+      }
+
+      #list :focus {
+        background-color: black;
+        color: white;
+        transition: all 0.5s;
+      }
+
+      #saveBtn {
+        font-family: 'Hahmlet-SemiBold';
+        position: absolute;
+        right: 0;
+        top: 30px;
+        width: 200px;
+        height: 70px;
+        font-size: 40px;
+        font-weight: bold;
+        background-color: rgb(32, 32, 32);
+        color: white;
+        border-bottom-left-radius: 50px;
+        border-top-left-radius: 50px;
+        transition: all 0.6s;
+        box-shadow: 3px 3px 7px black;
+        border: 0;
+      }
+
+      #saveBtn:hover {
+        cursor: pointer;
+        background-color: rgb(39, 39, 39);
+        transition: all 0.6s;
+      }
+
+      #saveBtn:active {
+        background-color: rgb(19, 19, 19);
+      }
+
+      #copyBtn {
+        font-family: 'Hahmlet-SemiBold';
+        position: absolute;
+        right: 0;
+        top: 130px;
+        width: 200px;
+        height: 70px;
+        font-size: 40px;
+        font-weight: bold;
+        background-color: rgb(32, 32, 32);
+        color: white;
+        border-bottom-left-radius: 50px;
+        border-top-left-radius: 50px;
+        transition: all 0.6s;
+        box-shadow: 3px 3px 7px black;
+        border: 0;
+      }
+
+      #copyBtn:hover {
+        cursor: pointer;
+        background-color: rgb(39, 39, 39);
+        transition: all 0.6s;
+      }
+
+      #copyBtn:active {
+        background-color: rgb(19, 19, 19);
+      }
+
+      .alert {
+        font-family: 'Hahmlet-SemiBold';
+        font-size: 24px;
+        position: absolute;
+        right: 60px;
+        top: 260px;
+        background-color: rgba(0, 0, 0, 0.87);
+        color: white;
+        width: 200px;
+        padding: 20px 0px;
+        text-align: center;
+        box-shadow: 1px 1px 5px gray;
+        display: none;
+        transition: all 1s;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="capture">
+      <h1 id="todo">💘 To-do List 💘</h1>
+      <div id="line"></div>
+      <div id="oath">
+        <div class="oaths">
+          나 <input id="name" type="text" /> 은(는) 오늘 하루 계획을<br />
+        </div>
+        <div class="oaths">성실히 실천할 것을 맹세합니다</div>
+      </div>
+      <input type="datetime-local" id="datetime" />
+      <div id="list">
+        <div>
+          <div id="import">🔔 중요하게 할 일</div>
+          <input class="lists" type="text" />
+        </div>
+        <div>
+          <input class="lists" type="text" />
+        </div>
+        <div>
+          <input class="lists" type="text" />
+        </div>
+        <div>
+          <input class="lists" type="text" />
+        </div>
+        <div>
+          <input class="lists" type="text" />
+        </div>
+        <div>
+          <div id="need">💎 필요한 일</div>
+          <input class="lists" type="text" />
+        </div>
+        <div>
+          <input class="lists" type="text" />
+        </div>
+        <div>
+          <input class="lists" type="text" />
+        </div>
+
+        <div>
+          <input class="lists" type="text" />
+        </div>
+        <div>
+          <input class="lists" type="text" />
+        </div>
+      </div>
+    </div>
+    <button id="saveBtn">📁 Save</button>
+    <button id="copyBtn">📑 Copy</button>
+
+    <div id="saveAlert" class="alert">저장되었습니다.</div>
+    <div id="copyAlert" class="alert">복사되었습니다.</div>
+    <script>
+      let saveAlert = document.getElementById('saveAlert');
+      let copyAlert = document.getElementById('copyAlert');
+
+      $(function () {
+        $('#saveBtn').on('click', function () {
+          html2canvas(document.querySelector('#capture')).then(canvas => {
+            saveAs(canvas.toDataURL('image/png'), 'To-Do.png');
+          });
+          saveAlert.style.display = 'inline-block';
+          setTimeout(function () {
+            saveAlert.style.display = 'none';
+          }, 5000);
+        });
+        function saveAs(uri, filename) {
+          var link = document.createElement('a');
+          if (typeof link.download === 'string') {
+            link.href = uri;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+          } else {
+            window.open(uri);
+          }
+        }
+      });
+
+      $(function () {
+        $('#copyBtn').on('click', function () {
+          html2canvas(document.querySelector('#capture')).then(canvas => {
+            canvas.toBlob(blob => {
+              navigator.clipboard.write([
+                new ClipboardItem({
+                  'image/png': blob,
+                }),
+              ]);
+            });
+          });
+          copyAlert.style.display = 'inline-block';
+          setTimeout(function () {
+            copyAlert.style.display = 'none';
+          }, 5000);
+        });
+      });
+    </script>
+  </body>
+</html>
